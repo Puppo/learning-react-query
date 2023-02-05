@@ -1,14 +1,17 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
-import NxWelcome from './nx-welcome';
+import { SnackbarProvider } from 'notistack';
+import React from "react";
+import Router from './Router';
 
-export function App() {
+function App() {
+
   return (
-    <>
-      <NxWelcome title="todo-list" />
-      <div />
-    </>
+    <React.StrictMode>
+      <SnackbarProvider maxSnack={3}>
+        <Router />
+      </SnackbarProvider>
+    </React.StrictMode>
   );
+
 }
 
 export default App;

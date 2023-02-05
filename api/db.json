@@ -1,0 +1,10 @@
+{
+  "users": [
+    {
+      "email": "test@test.it",
+      "password": "$2a$10$ONSI/ac5n4iyMj7LfcRIsOzYQ8dqPYK33TTH1Qp7YORPjvofkoTgS",
+      "id": 1
+    }
+  ],
+  "tasks": []
+}

@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  all: unset;
+}
+
+.error {
+  display: none;
+}
+.error.active {
+  display: block;
+  color: red;
+}
+
+.fade-out {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 1s 0.5s, opacity 0.5s;
+}

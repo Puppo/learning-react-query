@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "api": "json-server-auth --watch api/db.json --port 3001 --routes api/routes.json"
   },
   "private": true,
   "devDependencies": {
@@ -33,6 +34,8 @@
     "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.6.0",
     "jsdom": "~20.0.3",
+    "json-server": "^0.17.1",
+    "json-server-auth": "^2.1.0",
     "nx": "15.6.3",
     "prettier": "^2.6.2",
     "react-test-renderer": "18.2.0",
@@ -44,7 +47,15 @@
     "vitest": "^0.25.8"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.7",
+    "@mui/system": "^5.11.7",
+    "notistack": "^2.0.8",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.8.0"
   }
 }
