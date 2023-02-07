@@ -1,9 +1,9 @@
 import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { Todo } from "../../../models";
 import AddTodoForm from "./components/AddTodoForm";
 import List from "./components/List";
+import { useTodos } from "./hooks/useTodos";
 
 const styles = {
   Paper: {
@@ -18,23 +18,15 @@ function ListPage() {
   const auth = true;
   const { enqueueSnackbar } = useSnackbar();
   const [currentTab, setCurrentTab] = useState<number>(0);
-  const [list, setList] = useState<Todo[]>([{
-    id: 1,
-    text: 'Todo Example 1',
-  }, {
-    id: 2,
-    text: 'Todo Example 2',
-  }, {
-    id: 3,
-    text: 'Todo Example 3',
-    assigneeId: 1
-  }]);
+  const { todos: list, isLoading, isFetching, error } = useTodos();
 
   const addToList = (text: string) => {
     enqueueSnackbar('Add new Todo', {
       variant: 'success'
     })
   };
+
+
 
 
   return (
@@ -70,10 +62,15 @@ function ListPage() {
           </Paper>
         </Grid>
         <Grid item xs={12} style={styles.Paper}>
+          {error && <div style={{
+            color: 'red'
+          }}>{error}</div>}
           <List
             auth={auth}
             list={list}
           />
+          {isFetching && <div>Fetching...</div>}
+          {isLoading && <div>Loading...</div>}
         </Grid>
       </Grid>
     </>);

@@ -6,5 +6,19 @@
       "id": 1
     }
   ],
-  "tasks": []
+  "tasks": [
+    {
+      "id": 1,
+      "text": "Todo 1"
+    },
+    {
+      "id": 2,
+      "text": "Todo 2"
+    },
+    {
+      "id": 3,
+      "text": "Todo 3",
+      "assigneeId": 1
+    }
+  ]
 }
