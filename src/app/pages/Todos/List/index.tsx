@@ -1,8 +1,8 @@
 import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
-import { useSnackbar } from "notistack";
 import { useState } from "react";
 import AddTodoForm from "./components/AddTodoForm";
 import List from "./components/List";
+import { useAddTodo } from "./hooks/useAddTodo";
 import { useTodos } from "./hooks/useTodos";
 
 const styles = {
@@ -16,14 +16,13 @@ const styles = {
 
 function ListPage() {
   const auth = true;
-  const { enqueueSnackbar } = useSnackbar();
+
   const [currentTab, setCurrentTab] = useState<number>(0);
   const { todos: list, isLoading, isFetching, error } = useTodos();
+  const { addTodo } = useAddTodo();
 
   const addToList = (text: string) => {
-    enqueueSnackbar('Add new Todo', {
-      variant: 'success'
-    })
+    addTodo(text)
   };
 
 
