@@ -1,4 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SnackbarProvider } from 'notistack';
 import React from "react";
 import { Loader } from './components';
@@ -14,6 +15,7 @@ function App() {
           <Loader />
           <Router />
         </SnackbarProvider>
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </React.StrictMode>
   );
