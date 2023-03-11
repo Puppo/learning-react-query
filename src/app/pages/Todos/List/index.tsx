@@ -1,9 +1,9 @@
 import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
 import { useCallback, useState } from "react";
-import { useUser } from "src/app/auth/useUser";
 import AddTodoForm from "./components/AddTodoForm";
 import List from "./components/List";
 import { useAddTodo } from "./hooks/useAddTodo";
+import { useMyTodos } from "./hooks/useMyTodos";
 import { useTodos } from "./hooks/useTodos";
 
 const styles = {
@@ -17,11 +17,34 @@ const styles = {
 
 type Views = 'AllTodo' | 'MyTodo';
 
-function ListPage() {
-  const { user } = useUser();
+function AllTodo() {
+  const { todos, error } = useTodos();
 
+  return <>{error && <div style={{
+    color: 'red'
+  }}>{error}</div>}
+    <List
+      auth={true}
+      list={todos}
+    />
+  </>
+}
+
+function MyTodo() {
+  const { todos, error } = useMyTodos();
+
+  return <>{error && <div style={{
+    color: 'red'
+  }}>{error}</div>}
+    <List
+      auth={true}
+      list={todos}
+    />
+  </>
+}
+
+function ListPage() {
   const [currentTab, setCurrentTab] = useState<Views>('AllTodo');
-  const { todos: list, isLoading, isFetching, error, setUserFilter } = useTodos();
   const { addTodo } = useAddTodo();
 
   const addToList = useCallback((text: string) => {
@@ -29,10 +52,8 @@ function ListPage() {
   }, [addTodo]);
 
   const changeView = useCallback((event: React.SyntheticEvent<Element, Event>, value: Views) => {
-    const userId = value === 'MyTodo' ? user?.user.id ?? 0 : null;
-    setUserFilter(userId)
     setCurrentTab(value)
-  }, [user, setUserFilter])
+  }, [])
 
   return (
     <>
@@ -65,15 +86,8 @@ function ListPage() {
           </Paper>
         </Grid>
         <Grid item xs={12} style={styles.Paper}>
-          {error && <div style={{
-            color: 'red'
-          }}>{error}</div>}
-          <List
-            auth={!!user}
-            list={list}
-          />
-          {isFetching && <div>Fetching...</div>}
-          {isLoading && <div>Loading...</div>}
+          {currentTab === 'AllTodo' && <AllTodo />}
+          {currentTab === 'MyTodo' && <MyTodo />}
         </Grid>
       </Grid>
     </>);
