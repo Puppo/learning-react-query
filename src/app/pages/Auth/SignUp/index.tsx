@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import { FormEventHandler } from "react";
 import { Link } from "react-router-dom";
-import { useSignIn } from "../../../auth/useSignIn";
+import { useSignUp } from "../../../auth/useSignUp";
 
 const styles = {
   Paper: {
@@ -12,17 +12,17 @@ const styles = {
   }
 } as const;
 
-function SignInPage() {
-  const signIn = useSignIn();
+function SignUpPage() {
+  const signUp = useSignUp();
 
-  const onSignIn: FormEventHandler<HTMLFormElement> = (form) => {
+  const onSignUp: FormEventHandler<HTMLFormElement> = (form) => {
     form.preventDefault();
     const formData = new FormData(form.currentTarget);
     const email = formData.get('email');
     const password = formData.get('password');
 
     if (typeof email === 'string' && typeof password === 'string') {
-      signIn({
+      signUp({
         email,
         password
       });
@@ -35,10 +35,10 @@ function SignInPage() {
         <Paper style={styles.Paper}>
           <Typography variant="h3" component="h2"
             paddingBottom="25px">
-            Sign In
+            Sign Up
           </Typography>
           <Box component="form"
-            onSubmit={onSignIn}
+            onSubmit={onSignUp}
             sx={{
               display: 'flex',
               flexFlow: 'column',
@@ -67,19 +67,18 @@ function SignInPage() {
               sx={{
                 mt: 1
               }}>
-              Sign in
+              Sign Up
             </Button>
-
 
             <Button
               component={Link}
-              to='/auth/sign-up'
+              to='/auth/sign-in'
               fullWidth
               variant="outlined"
               sx={{
                 mt: 2
               }}>
-              Sign Up
+              Sign In
             </Button>
           </Box>
         </Paper>
@@ -89,4 +88,4 @@ function SignInPage() {
 
 }
 
-export default SignInPage;
+export default SignUpPage;

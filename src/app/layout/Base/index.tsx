@@ -1,18 +1,21 @@
 import { PropsWithChildren } from "react";
+import { useSignOut } from "../../auth/useSignOut";
+import { useUser } from "../../auth/useUser";
 import { AppBar } from "../../components";
 
 export default function (
   { children }: PropsWithChildren
 ) {
-  const auth = false;
+  const { user } = useUser();
+  const signOut = useSignOut();
 
   const handleLogout = () => {
-    // TODO handle logout
+    signOut()
   }
 
   return <>
     <AppBar
-      auth={auth}
+      auth={!!user}
       logout={handleLogout}
     />
     {children}
