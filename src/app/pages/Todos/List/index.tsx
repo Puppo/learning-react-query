@@ -1,5 +1,6 @@
 import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useUser } from "src/app/auth/useUser";
 import AddTodoForm from "./components/AddTodoForm";
 import List from "./components/List";
 import { useAddTodo } from "./hooks/useAddTodo";
@@ -14,23 +15,28 @@ const styles = {
   }
 } as const;
 
-function ListPage() {
-  const auth = true;
+type Views = 'AllTodo' | 'MyTodo';
 
-  const [currentTab, setCurrentTab] = useState<number>(0);
-  const { todos: list, isLoading, isFetching, error } = useTodos();
+function ListPage() {
+  const { user } = useUser();
+
+  const [currentTab, setCurrentTab] = useState<Views>('AllTodo');
+  const { todos: list, isLoading, isFetching, error, setUserFilter } = useTodos();
   const { addTodo } = useAddTodo();
 
-  const addToList = (text: string) => {
+  const addToList = useCallback((text: string) => {
     addTodo(text)
-  };
+  }, [addTodo]);
 
-
-
+  const changeView = useCallback((event: React.SyntheticEvent<Element, Event>, value: Views) => {
+    const userId = value === 'MyTodo' ? user?.user.id ?? 0 : null;
+    setUserFilter(userId)
+    setCurrentTab(value)
+  }, [user, setUserFilter])
 
   return (
     <>
-      {auth && <Box>
+      <Box>
         <Box
           sx={{
             display: 'flex',
@@ -45,15 +51,13 @@ function ListPage() {
               margin: 'auto'
             }}
             value={currentTab}
-            onChange={(_, newValue) => {
-              setCurrentTab(newValue)
-            }}
+            onChange={changeView}
             aria-label="basic tabs example">
-            <Tab label="All Todo" />
-            <Tab label="My Todo" />
+            <Tab label="All Todo" value={'AllTodo'} />
+            <Tab label="My Todo" value={'MyTodo'} />
           </Tabs>
         </Box>
-      </Box>}
+      </Box>
       <Grid container spacing={0} marginTop="10px">
         <Grid item xs={12}>
           <Paper style={styles.Paper}>
@@ -65,7 +69,7 @@ function ListPage() {
             color: 'red'
           }}>{error}</div>}
           <List
-            auth={auth}
+            auth={!!user}
             list={list}
           />
           {isFetching && <div>Fetching...</div>}
