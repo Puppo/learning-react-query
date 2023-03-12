@@ -12,7 +12,7 @@ export function useSignOut(): IUseSignOut {
   const onSignOut = useCallback(() => {
     queryClient.setQueryData([QUERY_KEY.user], null);
     navigate('/auth/sign-in');
-  }, [])
+  }, [navigate, queryClient])
 
   return onSignOut
 
