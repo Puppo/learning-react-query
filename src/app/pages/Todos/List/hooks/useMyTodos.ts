@@ -3,6 +3,7 @@ import { QUERY_KEY } from 'src/app/constants/queryKeys';
 import { Todo } from 'src/app/models';
 import { User, useUser } from '../../../../auth/useUser';
 import { ResponseError } from '../../../../utils/Errors/ResponseError';
+import { mapError } from '../../../../utils/Errors/mapError';
 
 const fetchTodos = async (user: User): Promise<Todo[]> => {
   const response = await fetch(`api/tasks?assigneeId=${user.user.id}`, {
@@ -19,13 +20,6 @@ const fetchTodos = async (user: User): Promise<Todo[]> => {
 interface UseMyTodos {
   todos: Todo[];
   error?: string;
-}
-
-function mapError(error: unknown | undefined): undefined | string {
-  if (!error) return undefined;
-  if (error instanceof ResponseError) return error.response.statusText;
-  if (error instanceof Error) return error.message;
-  return 'Unknown error';
 }
 
 export const useMyTodos = (): UseMyTodos => {

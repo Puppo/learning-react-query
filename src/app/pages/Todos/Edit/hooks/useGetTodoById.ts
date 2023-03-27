@@ -2,6 +2,7 @@ import { QueryClient, useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from 'src/app/constants/queryKeys';
 import { Todo } from 'src/app/models';
 import { ResponseError } from '../../../../utils/Errors/ResponseError';
+import { mapError } from '../../../../utils/Errors/mapError';
 
 const fetchTodo = async (id: Todo['id']): Promise<Todo> => {
   const response = await fetch(`api/tasks/${id}`);
@@ -15,13 +16,6 @@ interface UseTodo {
   todo: Todo | null;
   isLoading: boolean;
   error?: string;
-}
-
-function mapError(error: unknown | undefined): undefined | string {
-  if (!error) return undefined;
-  if (error instanceof ResponseError) return error.response.statusText;
-  if (error instanceof Error) return error.message;
-  return 'Unknown error';
 }
 
 export const useGetTodoById = (id: Todo['id']): UseTodo => {

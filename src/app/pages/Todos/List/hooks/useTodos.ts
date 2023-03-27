@@ -1,8 +1,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
-import { QUERY_KEY } from 'src/app/constants/queryKeys';
-import { Todo } from 'src/app/models';
+import { QUERY_KEY } from '../../../../constants/queryKeys';
+import { Todo } from '../../../../models';
 import { ResponseError } from '../../../../utils/Errors/ResponseError';
+import { mapError } from '../../../../utils/Errors/mapError';
 import { prefetchGetTodoById } from '../../Edit/hooks/useGetTodoById';
 
 const fetchTodos = async (): Promise<Todo[]> => {
@@ -19,13 +20,6 @@ interface UseTodos {
   isFetching: boolean;
   error?: string;
   setUserFilter: Dispatch<SetStateAction<number | null>>;
-}
-
-function mapError(error: unknown | undefined): undefined | string {
-  if (!error) return undefined;
-  if (error instanceof ResponseError) return error.response.statusText;
-  if (error instanceof Error) return error.message;
-  return 'Unknown error';
 }
 
 export const useTodos = (): UseTodos => {
