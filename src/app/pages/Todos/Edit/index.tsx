@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { z } from "zod";
 import { CircularLoader } from "../../../components";
 import { useParamsTypeSafe } from "../../../utils/ReactRouter/useParamsTypeSafe";
+import { useEditTodo } from "./hooks/useEditTodo";
 import { useGetTodoById } from "./hooks/useGetTodoById";
 
 const params = z.object({
@@ -33,11 +34,21 @@ function EditTodo() {
     isLoading
   } = useGetTodoById(id)
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const editTodo = useEditTodo();
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = () => {
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    if (!todo) return;
     if (!inputRef.current) return;
 
-    // TODO: update todo
+    const text = inputRef.current.value;
+    if (!text) return;
+
+    editTodo({
+      ...todo,
+      text
+    });
   }
 
   if (isLoading) return <CircularLoader />
