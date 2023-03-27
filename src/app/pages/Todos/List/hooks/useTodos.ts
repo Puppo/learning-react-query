@@ -1,8 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { QUERY_KEY } from 'src/app/constants/queryKeys';
 import { Todo } from 'src/app/models';
 import { ResponseError } from '../../../../utils/Errors/ResponseError';
+import { prefetchGetTodoById } from '../../Edit/hooks/useGetTodoById';
 
 const fetchTodos = async (): Promise<Todo[]> => {
   const response = await fetch('api/tasks');
@@ -28,6 +29,8 @@ function mapError(error: unknown | undefined): undefined | string {
 }
 
 export const useTodos = (): UseTodos => {
+  const client = useQueryClient();
+
   const [userFilter, setUserFilter] = useState<number | null>(null);
 
   const filterTodoByAssignee = useCallback(
@@ -47,6 +50,11 @@ export const useTodos = (): UseTodos => {
     refetchOnWindowFocus: false,
     retry: 2,
     select: filterTodoByAssignee,
+    onSuccess: (data) => {
+      data.forEach((todo) => {
+        prefetchGetTodoById(client, todo.id);
+      });
+    },
   });
 
   return {

@@ -2,9 +2,15 @@ import { Save } from "@mui/icons-material";
 import { Box, Grid, Paper } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
-import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Todo } from "../../../models";
+import { useRef } from "react";
+import { z } from "zod";
+import { CircularLoader } from "../../../components";
+import { useParamsTypeSafe } from "../../../utils/ReactRouter/useParamsTypeSafe";
+import { useGetTodoById } from "./hooks/useGetTodoById";
+
+const params = z.object({
+  id: z.coerce.number()
+})
 
 const styles = {
   Icon: {
@@ -21,16 +27,20 @@ const styles = {
 } as const;
 
 function EditTodo() {
+  const { id } = useParamsTypeSafe(params)
+  const {
+    todo,
+    isLoading
+  } = useGetTodoById(id)
   const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const { id } = useParams()
-  const [todo] = useState<Todo | null>(null)
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = () => {
     if (!inputRef.current) return;
 
     // TODO: update todo
   }
+
+  if (isLoading) return <CircularLoader />
 
   return (
     <Grid xs={12} item>
