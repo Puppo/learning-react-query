@@ -6,8 +6,10 @@ import { ResponseError } from '../../../../utils/Errors/ResponseError';
 import { mapError } from '../../../../utils/Errors/mapError';
 import { prefetchGetTodoById } from '../../Edit/hooks/useGetTodoById';
 
-const fetchTodos = async (): Promise<Todo[]> => {
-  const response = await fetch('api/tasks');
+const fetchTodos = async (signal: AbortSignal | undefined): Promise<Todo[]> => {
+  const response = await fetch('api/tasks', {
+    signal,
+  });
   if (!response.ok) {
     throw new ResponseError('Failed to fetch todos', response);
   }
@@ -40,7 +42,7 @@ export const useTodos = (): UseTodos => {
     isLoading,
     isFetching,
     error,
-  } = useQuery([QUERY_KEY.todos], fetchTodos, {
+  } = useQuery([QUERY_KEY.todos], ({ signal }) => fetchTodos(signal), {
     refetchOnWindowFocus: false,
     retry: 2,
     select: filterTodoByAssignee,

@@ -6,7 +6,7 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "api": "json-server-auth --watch api/db.json --port 3001 --routes api/routes.json"
+    "api": "json-server-auth --watch api/db.json --port 3001 --routes api/routes.json --delay 3000"
   },
   "private": true,
   "devDependencies": {

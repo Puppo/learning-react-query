@@ -5,11 +5,15 @@ import { User, useUser } from '../../../../auth/useUser';
 import { ResponseError } from '../../../../utils/Errors/ResponseError';
 import { mapError } from '../../../../utils/Errors/mapError';
 
-const fetchTodos = async (user: User): Promise<Todo[]> => {
+const fetchTodos = async (
+  user: User,
+  signal?: AbortSignal
+): Promise<Todo[]> => {
   const response = await fetch(`api/tasks?assigneeId=${user.user.id}`, {
     headers: {
       Authorization: `Bearer ${user.accessToken}`,
     },
+    signal,
   });
   if (!response.ok) {
     throw new ResponseError('Failed to fetch my todos', response);
@@ -27,7 +31,7 @@ export const useMyTodos = (): UseMyTodos => {
 
   const { data: todos = [], error } = useQuery(
     [QUERY_KEY.myTodos],
-    () => fetchTodos(user!),
+    ({ signal }) => fetchTodos(user!, signal),
     {
       refetchOnWindowFocus: false,
       retry: 2,

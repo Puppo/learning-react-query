@@ -6,7 +6,6 @@ import { ResponseError } from '../../../../utils/Errors/ResponseError';
 import { mapError } from '../../../../utils/Errors/mapError';
 
 const editTodoRequest = async (todo: Todo): Promise<Todo> => {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
   const response = await fetch(`api/tasks/${todo.id}`, {
     method: 'PUT',
     headers: {
