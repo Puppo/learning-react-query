@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { QUERY_KEY } from '../../../../constants/queryKeys';
 import { Todo } from '../../../../models';
 import { ResponseError } from '../../../../utils/Errors/ResponseError';
@@ -13,7 +13,7 @@ const fetchTodos = async (
   totals: number;
   todos: Todo[];
 }> => {
-  const response = await fetch(`api/tasks?_page=${page}&_limit=${limit}`, {
+  const response = await fetch(`api/tasks?_page=${page + 1}&_limit=${limit}`, {
     signal,
   });
   if (!response.ok) {
@@ -36,39 +36,34 @@ interface UseTodos {
   isLoading: boolean;
   isFetching: boolean;
   error?: string;
-  pages: number;
-  page: number;
-  setPage: Dispatch<SetStateAction<number>>;
+  hasNext: boolean;
+  next?: () => void;
 }
 
 export const useTodos = (): UseTodos => {
-  const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(5);
 
-  const {
-    data: { todos, totals } = {
-      todos: [],
-      totals: 0,
-    },
-    isLoading,
-    isFetching,
-    error,
-  } = useQuery(
-    [QUERY_KEY.todos, page, limit],
-    ({ signal }) => fetchTodos(page, limit, signal),
-    {
-      refetchOnWindowFocus: false,
-      retry: 2,
-    }
-  );
+  const { data, hasNextPage, fetchNextPage, isLoading, isFetching, error } =
+    useInfiniteQuery(
+      [QUERY_KEY.todos],
+      ({ signal, pageParam: page = 0 }) => fetchTodos(page, limit, signal),
+      {
+        refetchOnWindowFocus: false,
+        retry: 2,
+        getNextPageParam: (lastPage, pages) => {
+          if (Math.ceil(lastPage.totals / limit) > pages.length)
+            return pages.length;
+          return undefined;
+        },
+      }
+    );
 
   return {
-    todos,
+    todos: data?.pages.flatMap(({ todos }) => todos) || [],
     isLoading,
     isFetching,
     error: mapError(error),
-    pages: Math.ceil(totals / limit),
-    page,
-    setPage,
+    next: fetchNextPage,
+    hasNext: hasNextPage || false,
   };
 };
