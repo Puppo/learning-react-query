@@ -2,6 +2,7 @@ import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
 import { useCallback, useState } from "react";
 import AddTodoForm from "./components/AddTodoForm";
 import List from "./components/List";
+import Pagination from "./components/Pagination";
 import { useAddTodo } from "./hooks/useAddTodo";
 import { useMyTodos } from "./hooks/useMyTodos";
 import { useTodos } from "./hooks/useTodos";
@@ -18,7 +19,7 @@ const styles = {
 type Views = 'AllTodo' | 'MyTodo';
 
 function AllTodo() {
-  const { todos, error } = useTodos();
+  const { todos, page, pages, setPage, error } = useTodos();
 
   return <>{error && <div style={{
     color: 'red'
@@ -26,6 +27,11 @@ function AllTodo() {
     <List
       auth={true}
       list={todos}
+    />
+    <Pagination
+      currentPage={page}
+      pages={pages}
+      setPage={setPage}
     />
   </>
 }
